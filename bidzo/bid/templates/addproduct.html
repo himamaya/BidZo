@@ -1,0 +1,274 @@
+{% extends 'sellerbase.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow border-0 rounded-4">
+
+        <div class="card-header bg-dark text-white rounded-top-4">
+
+            <h3 class="mb-0">Add Product</h3>
+
+        </div>
+
+        <div class="card-body p-4">
+
+            <!-- SUCCESS / ERROR MESSAGES -->
+
+            {% if messages %}
+
+                {% for message in messages %}
+
+                    <div class="alert alert-success alert-dismissible fade show">
+
+                        {{ message }}
+
+                        <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"></button>
+
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+            <!-- ADD PRODUCT FORM -->
+
+            <form method="POST"
+            enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                <!-- PRODUCT NAME -->
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+
+                        Product Name
+
+                    </label>
+
+                    <input type="text"
+                    name="product_name"
+                    class="form-control"
+                    placeholder="Enter product name"
+                    required>
+
+                </div>
+
+                <!-- DESCRIPTION -->
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+
+                        Description
+
+                    </label>
+
+                    <textarea name="description"
+                    class="form-control"
+                    rows="4"
+                    placeholder="Enter product description"
+                    required></textarea>
+
+                </div>
+
+                <!-- CATEGORY -->
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+
+                        Category
+
+                    </label>
+
+                    <select name="category"
+                    class="form-select"
+                    required>
+
+                        <option value="">
+
+                            Select Category
+
+                        </option>
+
+                        {% for category in categories %}
+
+                            <option value="{{ category.id }}">
+
+                                {{ category.category_name }}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <!-- SUBCATEGORY -->
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+
+                        Subcategory
+
+                    </label>
+
+                    <select name="subcategory"
+                    class="form-select"
+                    required>
+
+                        <option value="">
+
+                            Select Subcategory
+
+                        </option>
+
+                        {% for subcategory in subcategories %}
+
+                            <option value="{{ subcategory.id }}">
+
+                                {{ subcategory.subcategory_name }}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <!-- CONDITION -->
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+
+                        Condition
+
+                    </label>
+
+                    <select name="condition"
+                    class="form-select"
+                    required>
+
+                        <option value="">
+
+                            Select Condition
+
+                        </option>
+
+                        <option value="new">
+
+                            New
+
+                        </option>
+
+                        <option value="used">
+
+                            Used
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <!-- STARTING BID -->
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+
+                        Starting Bid (₹)
+
+                    </label>
+
+                    <input type="number"
+                    name="starting_bid"
+                    class="form-control"
+                    step="0.01"
+                    min="1"
+                    placeholder="Enter starting bid amount"
+                    required>
+
+                </div>
+
+                <!-- AUCTION END TIME -->
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+
+                        Auction End Time
+
+                    </label>
+
+                    <input type="datetime-local"
+                    name="auction_end_time"
+                    class="form-control"
+                    min="{{ now|date:'Y-m-d\\TH:i' }}"
+                    required>
+
+                </div>
+
+                <!-- PRODUCT IMAGE -->
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+
+                        Product Image
+
+                    </label>
+
+                    <input type="file"
+                    name="product_image"
+                    class="form-control"
+                    accept="image/*"
+                    required>
+
+                </div>
+
+                <!-- SELLER NAME -->
+
+                <div class="mb-4">
+
+                    <label class="form-label fw-semibold">
+
+                        Seller Name
+
+                    </label>
+
+                    <input type="text"
+                    class="form-control"
+                    value="{{ user.first_name }} {{ user.last_name }}"
+                    readonly>
+
+                </div>
+
+                <!-- SUBMIT BUTTON -->
+
+                <button type="submit"
+                class="btn btn-dark px-4 py-2">
+
+                    Add Product
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

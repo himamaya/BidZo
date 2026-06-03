@@ -1,0 +1,534 @@
+{% extends 'buyerbase.html' %}
+
+{% block content %}
+
+<style>
+    .auction-card {
+
+        border: none;
+        border-radius: 30px;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+
+    }
+
+    .product-image {
+
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+
+    }
+
+    .current-bid-box {
+
+        background: linear-gradient(to right, #111827, #1e3a8a);
+        color: white;
+        border-radius: 25px;
+        padding: 25px;
+
+    }
+
+    .info-box {
+
+        background: #f8fafc;
+        border-radius: 20px;
+        padding: 18px;
+
+    }
+
+    .bid-btn {
+
+        border-radius: 50px;
+        padding: 14px;
+        font-size: 18px;
+        font-weight: bold;
+
+    }
+
+    .history-card {
+
+        background: white;
+        border-radius: 25px;
+        padding: 20px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+
+    }
+
+    .history-item {
+
+        border-bottom: 1px solid #e5e7eb;
+        padding: 15px 0;
+
+    }
+
+    .history-item:last-child {
+
+        border-bottom: none;
+
+    }
+
+    .bidder-avatar {
+
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: #1e3a8a;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+
+    }
+</style>
+
+<div class="container mt-5">
+
+    <!-- MESSAGES -->
+
+    {% if messages %}
+
+    {% for message in messages %}
+
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-4 shadow-sm mb-4">
+
+        {{ message }}
+
+        <button type="button" class="btn-close" data-bs-dismiss="alert">
+
+        </button>
+
+    </div>
+
+    {% endfor %}
+
+    {% endif %}
+
+    <!-- MAIN CARD -->
+
+    <div class="auction-card">
+
+        <div class="row g-0">
+
+            <!-- IMAGE -->
+
+            <div class="col-lg-7">
+
+                <img src="{{ product.product_image.url }}" class="product-image">
+
+            </div>
+
+            <!-- DETAILS -->
+
+            <div class="col-lg-5">
+
+                <div class="p-4 p-lg-5">
+
+                    <!-- CATEGORY -->
+
+                    <span class="badge bg-dark px-3 py-2 mb-3">
+
+                        {{ product.category.category_name }}
+
+                    </span>
+
+                    <!-- PRODUCT NAME -->
+
+                    <h1 class="fw-bold mb-3">
+
+                        {{ product.product_name }}
+
+                    </h1>
+
+                    <!-- DESCRIPTION -->
+
+                    <p class="text-muted mb-4">
+
+                        {{ product.description }}
+
+                    </p>
+
+                    <!-- SELLER + CONDITION -->
+
+                    <div class="row mb-4">
+
+                        <div class="col-md-6">
+
+                            <div class="info-box">
+
+                                <small class="text-muted">
+
+                                    Seller
+
+                                </small>
+
+                                <h6 class="fw-bold mt-1">
+
+                                    {{ product.seller.first_name }}
+                                    {{ product.seller.last_name }}
+
+                                </h6>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <div class="info-box">
+
+                                <small class="text-muted">
+
+                                    Condition
+
+                                </small>
+
+                                <h6 class="fw-bold mt-1 text-capitalize">
+
+                                    {{ product.condition }}
+
+                                </h6>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- CURRENT BID -->
+
+                    <div class="current-bid-box mb-4">
+
+                        <small>
+
+                            Current Highest Bid
+
+                        </small>
+
+                        <h1 class="fw-bold mt-2">
+
+                            ₹{{ product.current_bid|default:product.starting_bid }}
+
+                        </h1>
+
+                        <!-- STARTING BID -->
+
+                        <small class="d-block mt-3">
+
+                            Starting Bid:
+                            ₹{{ product.starting_bid }}
+
+                        </small>
+
+                        <!-- EXTRA INFO -->
+
+                        <div class="d-flex justify-content-between mt-4">
+
+                            <div>
+
+                                <small>Total Bids</small>
+
+                                <h6 class="fw-bold">
+
+                                    {{ product.bid_count }}
+
+                                </h6>
+
+                            </div>
+
+                            <div class="text-end">
+
+                                <small>Auction Ends</small>
+
+                                <h6 class="fw-bold">
+
+                                    {{ product.auction_end_time }}
+
+                                </h6>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- ACTIVE AUCTION -->
+
+                    {% if not auction_ended %}
+
+                    <!-- BID FORM -->
+
+                    <form method="POST" action="{% url 'placebid' product.id %}">
+
+                        {% csrf_token %}
+
+                        <div class="input-group mb-3">
+
+                            <span class="input-group-text">
+
+                                ₹
+
+                            </span>
+
+                            <input type="number" name="bid_amount" class="form-control"
+                                min="{{ product.current_bid|default:product.starting_bid }}"
+                                placeholder="Enter your bid amount" required>
+
+                        </div>
+
+                        <button type="submit" class="btn btn-warning w-100 bid-btn">
+
+                            Bid Now
+
+                        </button>
+
+                    </form>
+
+                    <!-- COUNTDOWN -->
+
+                    <div class="current-bid-box mt-3">
+
+                        <small>
+
+                            Auction Ends In
+
+                        </small>
+
+                        <h3 id="countdown"></h3>
+
+                    </div>
+
+                    {% else %}
+
+                    <div class="alert alert-danger rounded-4">
+
+                        <h4 class="fw-bold text-center mb-4">
+                            Auction Ended
+                        </h4>
+
+                        {% if winner %}
+
+                        <div class="card border-0 shadow">
+
+                            <div class="card-body text-center">
+
+                                <div style="font-size:70px;">
+                                    🏆
+                                </div>
+
+                                <h3 class="text-warning fw-bold">
+                                    Auction Winner
+                                </h3>
+
+                                <div class="bidder-avatar mx-auto my-3" style="width:80px;height:80px;font-size:28px;">
+
+                                    {{ winner.bidder.first_name|slice:":1" }}
+
+                                </div>
+
+                                <h4 class="fw-bold">
+
+                                    {{ winner.bidder.first_name }}
+                                    {{ winner.bidder.last_name }}
+
+                                </h4>
+
+                                <p class="text-muted">
+                                    Highest Bidder
+                                </p>
+
+                                <h2 class="text-success fw-bold">
+
+                                    ₹{{ winner.bid_amount }}
+
+                                </h2>
+
+                                <span class="badge bg-success px-4 py-2">
+                                    Winning Bid
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        {% else %}
+
+                        <div class="alert alert-secondary mb-0">
+
+                            No bids were placed for this auction.
+
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- BID HISTORY -->
+
+    <div class="history-card mt-5">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <h3 class="fw-bold mb-0">
+
+                Bid History
+
+            </h3>
+
+            <span class="badge bg-dark">
+
+                {{ product.bid_count }} Bids
+
+            </span>
+
+        </div>
+
+      {% if bids %}
+
+    {% for bid in bids %}
+
+    <div class="history-item">
+
+        {% if auction_ended and forloop.first %}
+
+        <div class="mb-2">
+
+            <span class="badge bg-warning text-dark">
+
+                🏆 Winning Bid
+
+            </span>
+
+        </div>
+
+        {% endif %}
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div class="d-flex align-items-center gap-3">
+
+                <!-- AVATAR -->
+
+                <div class="bidder-avatar">
+
+                    {{ bid.bidder.first_name|slice:":1" }}
+
+                </div>
+
+                <!-- BIDDER -->
+
+                <div>
+
+                    <h6 class="mb-0 fw-bold">
+
+                        {{ bid.bidder.first_name }}
+                        {{ bid.bidder.last_name }}
+
+                    </h6>
+
+                    <small class="text-muted">
+
+                        {{ bid.bid_time }}
+
+                    </small>
+
+                </div>
+
+            </div>
+
+            <!-- BID AMOUNT -->
+
+            <h5 class="fw-bold text-success mb-0">
+
+                ₹{{ bid.bid_amount }}
+
+            </h5>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+{% else %}
+
+    <div class="text-center py-4">
+
+        <h5 class="text-muted">
+
+            No bids placed yet
+
+        </h5>
+
+    </div>
+
+{% endif %}
+<!-- COUNTDOWN SCRIPT -->
+
+<script>
+
+    const endTime = new Date(
+        "{{ product.auction_end_time|date:'Y-m-d H:i:s' }}"
+    ).getTime();
+
+    const timer = setInterval(function () {
+
+        const now = new Date().getTime();
+
+        const distance = endTime - now;
+
+        if (distance <= 0) {
+
+            clearInterval(timer);
+
+            document.getElementById("countdown").innerHTML =
+
+                "Auction Ended";
+
+            return;
+
+        }
+
+        const days = Math.floor(
+            distance / (1000 * 60 * 60 * 24)
+        );
+
+        const hours = Math.floor(
+            (distance % (1000 * 60 * 60 * 24))
+            / (1000 * 60 * 60)
+        );
+
+        const minutes = Math.floor(
+            (distance % (1000 * 60 * 60))
+            / (1000 * 60)
+        );
+
+        const seconds = Math.floor(
+            (distance % (1000 * 60))
+            / 1000
+        );
+
+        document.getElementById("countdown").innerHTML =
+
+            days + "d "
+            + hours + "h "
+            + minutes + "m "
+            + seconds + "s";
+
+    }, 1000);
+
+</script>
+
+{% endblock %}

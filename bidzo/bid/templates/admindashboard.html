@@ -1,0 +1,82 @@
+{% extends 'baseadmin.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h3 class="fw-bold mb-4">
+        Admin Dashboard Overview
+    </h3>
+
+    <div class="row g-4">
+
+        <!-- TOTAL USERS (WITHOUT ADMIN) -->
+        <div class="col-md-6">
+
+            <div class="card text-white bg-primary shadow border-0 rounded-4">
+
+                <div class="card-body d-flex justify-content-between align-items-center">
+
+                    <div>
+                        <h5 class="mb-2">Total Users</h5>
+                        <h2 class="fw-bold">{{ total_users }}</h2>
+                        
+                    </div>
+
+                    <div style="font-size:50px;">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- TOTAL PRODUCTS -->
+        <div class="col-md-6">
+
+            <div class="card text-white bg-success shadow border-0 rounded-4">
+
+                <div class="card-body d-flex justify-content-between align-items-center">
+
+                    <div>
+                        <h5 class="mb-2">Total Products</h5>
+                        <h2 class="fw-bold">{{ total_products }}</h2>
+                       
+                    </div>
+
+                    <div style="font-size:50px;">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- INFO BOX -->
+    <div class="row mt-4">
+
+        <div class="col-md-12">
+
+            <div class="card shadow-sm border-0 p-3">
+
+                <h5 class="fw-bold">System Status</h5>
+
+                <p class="mb-0 text-muted">
+                    Welcome Admin — manage users, products, auctions, and complaints from here.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

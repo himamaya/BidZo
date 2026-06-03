@@ -1,0 +1,187 @@
+{% extends 'buyerbase.html' %}
+
+{% block content %}
+
+<style>
+
+    .auction-card {
+        border: none;
+        border-radius: 25px;
+        overflow: hidden;
+        transition: 0.3s;
+        background: white;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        min-height: 750px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .auction-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .auction-image {
+        height: 350px;
+        width: 100%;
+        object-fit: cover;
+    }
+
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        padding: 1.5rem;
+    }
+
+    .description-box {
+        min-height: 90px;
+    }
+
+    .winner-box {
+        background: #ecfdf5;
+        border-radius: 15px;
+        padding: 12px;
+        min-height: 75px;
+    }
+
+    .view-btn {
+        margin-top: auto;
+    }
+
+</style>
+
+<div class="container mt-5">
+
+    <!-- PAGE TITLE -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+                Ended Auctions
+            </h2>
+
+            <p class="text-muted">
+                View completed auctions and winners
+            </p>
+
+        </div>
+
+        <span class="badge bg-dark fs-6">
+            {{ products|length }} Auctions
+        </span>
+
+    </div>
+
+    <!-- PRODUCTS -->
+
+    <div class="row g-4">
+
+        {% for product in products %}
+
+        <div class="col-lg-4 col-md-6">
+
+            <div class="card auction-card h-100">
+
+                {% if product.product_image %}
+                <img src="{{ product.product_image.url }}"
+                     class="card-img-top auction-image"
+                     alt="{{ product.product_name }}">
+                {% endif %}
+
+                <div class="card-body">
+
+                    <span class="badge bg-secondary mb-2">
+                        {{ product.category.category_name }}
+                    </span>
+
+                    <h4 class="fw-bold">
+                        {{ product.product_name }}
+                    </h4>
+
+                    <div class="description-box">
+
+                        <p class="text-muted small">
+                            {{ product.description|truncatewords:15 }}
+                        </p>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <small class="text-muted">
+                            Final Bid
+                        </small>
+
+                        <h4 class="fw-bold text-success">
+                            ₹{{ product.current_bid|default:product.starting_bid }}
+                        </h4>
+
+                    </div>
+
+                    {% if product.winner %}
+
+                    <div class="winner-box mb-3">
+
+                        <small class="text-muted">
+                            Winner
+                        </small>
+
+                        <h6 class="fw-bold mb-0 mt-1">
+                            🏆 {{ product.winner.first_name }}
+                            {{ product.winner.last_name }}
+                        </h6>
+
+                    </div>
+
+                    {% else %}
+
+                    <div class="alert alert-secondary mb-3">
+                        No bids placed
+                    </div>
+
+                    {% endif %}
+
+                    <div class="mb-4">
+
+                        <small class="text-muted">
+                            Auction Ended On
+                        </small>
+
+                        <p class="fw-semibold text-danger mb-0">
+                            {{ product.auction_end_time|date:"d M Y h:i A" }}
+                        </p>
+
+                    </div>
+
+                    <a href="{% url 'auctiondetails' product.id %}"
+                       class="btn btn-dark w-100 rounded-pill view-btn">
+
+                        View Auction
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="col-12 text-center">
+
+            <div class="alert alert-warning rounded-4">
+                No ended auctions available
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

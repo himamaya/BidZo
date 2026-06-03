@@ -1,0 +1,50 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+
+    path('userregistration/', views.userregistration, name='userregistration'),
+    path('userlogin/', views.userlogin, name='userlogin'),
+    path('userdashboard/', views.userdashboard, name='userdashboard'),
+    path('profile/', views.profile, name='profile'),
+    path('editprofile/', views.editprofile, name='editprofile'),
+    path('buyerhome/', views.buyerhome, name='buyerhome'),
+    path('changepassword/', views.changepassword, name='changepassword'),
+    path('', views.landing, name='landing'),
+    path('sellerdashboard/', views.sellerdashboard, name='sellerdashboard'),
+    path('logout/', views.logout_view, name='logout'),
+    path('bothdashboard/', views.bothdashboard, name='bothdashboard'),
+    path('admindashboard/', views.admindashboard, name='admindashboard'),
+    path('viewusers/', views.viewusers, name='viewusers'),
+    path('blockuser/<int:id>/', views.blockuser, name='blockuser'),
+    path('unblockuser/<int:id>/', views.unblockuser, name='unblockuser'),
+     path('addproduct/',views.addproduct,name='addproduct'),
+     path('pendingproducts/',views.pendingproducts,name='pendingproducts'),
+
+path('approveproduct/<int:id>/',views.approveproduct,name='approveproduct'),
+
+path('rejectproduct/<int:id>/',views.rejectproduct,name='rejectproduct'),
+path('myproducts/', views.myproducts, name='myproducts'),
+path('edit_product/<int:pid>/', views.edit_product, name='edit_product'),
+path('delete_product/<int:pid>/', views.delete_product, name='delete_product'),
+path('viewproduct/', views.viewproduct, name='viewproduct'),
+path('liveauctions/', views.liveauctions, name='liveauctions'),
+path('auctiondetails/<int:pid>/',views.auctiondetails,name='auctiondetails'),
+path('placebid/<int:pid>/', views.placebid, name='placebid'),
+path('endedauctions/', views.endedauctions, name='endedauctions'),
+path('viewbids/<int:pid>/',views.viewbids,name='viewbids'),
+path('mybids/', views.mybids, name='mybids'),
+path('mywins/', views.mywins, name='mywins'),
+path('buyer-notifications/',views.buyer_notifications,name='buyer_notifications'),
+path('seller-notifications/',views.seller_notifications,name='seller_notifications'),
+path('ending-soon/', views.ending_soon_auctions, name='ending_soon'),
+path('buyercomplaint/',views.buyer_complaint,name='buyer_complaint'),
+path('payment/<int:oid>/', views.payment, name='payment'),
+path('seller-complaint/', views.seller_complaint, name='seller_complaint'),
+path('categories/', views.category_page, name='category_page'),
+path('admin_liveauctions/', views.admin_liveauctions, name='admin_liveauctions'),
+path('admin_endedauctions/', views.admin_endedauctions, name='admin_endedauctions'),
+path('admin_delete-auction/<int:product_id>/', views.delete_auction, name='delete_auction'),
+path('admin_complaints/', views.admin_complaints, name='admin_complaints'),
+
+]

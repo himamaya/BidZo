@@ -1,0 +1,76 @@
+{% extends 'baseadmin.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h3 class="mb-4">🧾 Complaint Management</h3>
+
+    <div class="row">
+
+        {% for c in complaints %}
+
+        <div class="col-md-6 mb-3">
+
+            <div class="card shadow border-0">
+
+                <div class="card-body">
+
+                    <h5>{{ c.subject }}</h5>
+
+                    <p><b>Type:</b> {{ c.user_type }}</p>
+
+                    <p>{{ c.complaint }}</p>
+
+                    <!-- STATUS -->
+                    <p>
+                        <b>Status:</b>
+
+                        {% if c.status == "Replied" %}
+                            <span class="badge bg-success">Replied</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        {% endif %}
+                    </p>
+
+                    <!-- SHOW EXISTING REPLY -->
+                    {% if c.admin_reply %}
+                        <div class="alert alert-info">
+                            <b>Reply:</b> {{ c.admin_reply }}
+                        </div>
+                    {% endif %}
+
+                    <!-- INLINE REPLY FORM -->
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <input type="hidden" name="complaint_id" value="{{ c.id }}">
+
+                        <textarea name="reply"
+                                  class="form-control"
+                                  rows="2"
+                                  placeholder="Write reply..."></textarea>
+
+                        <button class="btn btn-primary btn-sm mt-2 w-100">
+                            Send Reply
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <p>No complaints found.</p>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

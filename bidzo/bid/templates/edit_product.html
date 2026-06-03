@@ -1,0 +1,195 @@
+{% extends 'sellerbase.html' %}
+
+{% block content %}
+
+<div class="card shadow border-0">
+
+    <div class="card-header bg-dark text-white">
+        <h3>Edit Product</h3>
+    </div>
+
+    <div class="card-body">
+
+        <form method="POST" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <!-- PRODUCT NAME -->
+            <div class="mb-3">
+
+                <label class="form-label">Product Name</label>
+
+                <input type="text"
+                       name="product_name"
+                       class="form-control"
+                       value="{{ product.product_name }}"
+                       required>
+
+            </div>
+
+            <!-- DESCRIPTION -->
+            <div class="mb-3">
+
+                <label class="form-label">Description</label>
+
+                <textarea name="description"
+                          class="form-control"
+                          rows="4"
+                          required>{{ product.description }}</textarea>
+
+            </div>
+
+            <!-- CATEGORY -->
+            <div class="mb-3">
+
+                <label class="form-label">Category</label>
+
+                <select name="category"
+                        class="form-select"
+                        required>
+
+                    {% for category in categories %}
+
+                        <option value="{{ category.id }}"
+                        
+                        {% if product.category.id == category.id %}
+                            selected
+                        {% endif %}
+                        >
+
+                            {{ category.category_name }}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <!-- SUBCATEGORY -->
+            <div class="mb-3">
+
+                <label class="form-label">Subcategory</label>
+
+                <select name="subcategory"
+                        class="form-select"
+                        required>
+
+                    {% for subcategory in subcategories %}
+
+                        <option value="{{ subcategory.id }}"
+
+                        {% if product.subcategory.id == subcategory.id %}
+                            selected
+                        {% endif %}
+                        >
+
+                            {{ subcategory.subcategory_name }}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <!-- CONDITION -->
+            <div class="mb-3">
+
+                <label class="form-label">Condition</label>
+
+                <select name="condition"
+                        class="form-select"
+                        required>
+
+                    <option value="new"
+                    
+                    {% if product.condition == 'new' %}
+                        selected
+                    {% endif %}
+                    >
+                        New
+                    </option>
+
+                    <option value="used"
+
+                    {% if product.condition == 'used' %}
+                        selected
+                    {% endif %}
+                    >
+                        Used
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- STARTING BID -->
+            <div class="mb-3">
+
+                <label class="form-label">Starting Bid</label>
+
+                <input type="number"
+                       name="starting_bid"
+                       class="form-control"
+                       value="{{ product.starting_bid }}"
+                       required>
+
+            </div>
+
+            <!-- AUCTION END TIME -->
+            <div class="mb-3">
+
+                <label class="form-label">Auction End Time</label>
+
+                <input type="datetime-local"
+                       name="auction_end_time"
+                       class="form-control"
+                       value="{{ product.auction_end_time|date:'Y-m-d\\TH:i' }}"
+                       required>
+
+            </div>
+
+            <!-- CURRENT IMAGE -->
+            <div class="mb-3">
+
+                <label class="form-label">Current Image</label>
+
+                <br>
+
+                {% if product.product_image %}
+                    <img src="{{ product.product_image.url }}"
+                         width="150"
+                         class="img-thumbnail">
+                {% endif %}
+
+            </div>
+
+            <!-- NEW IMAGE -->
+            <div class="mb-3">
+
+                <label class="form-label">Change Product Image</label>
+
+                <input type="file"
+                       name="product_image"
+                       class="form-control">
+
+            </div>
+
+            <!-- UPDATE BUTTON -->
+            <button type="submit"
+                    class="btn btn-primary">
+
+                Update Product
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

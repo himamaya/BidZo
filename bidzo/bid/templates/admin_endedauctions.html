@@ -1,0 +1,81 @@
+{% extends 'baseadmin.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h3 class="mb-4"> Ended Auctions Management</h3>
+
+    <div class="row">
+
+        {% for item in data %}
+
+        <div class="col-md-4 mb-4">
+
+            <div class="card shadow border-0">
+
+                {% if item.product.product_image %}
+                <img src="{{ item.product.product_image.url }}"
+                     class="card-img-top"
+                     style="height:200px; object-fit:cover;">
+                {% endif %}
+
+                <div class="card-body">
+
+                    <h5>{{ item.product.product_name }}</h5>
+
+                    <p class="text-muted">
+                        {{ item.product.description|truncatewords:12 }}
+                    </p>
+
+                    <p>
+                        <b>Final Price:</b>
+
+                        {% if item.highest_bid %}
+                            <span class="text-success">
+                                ₹{{ item.highest_bid.bid_amount }}
+                            </span>
+                        {% else %}
+                            <span class="text-danger">No Bids</span>
+                        {% endif %}
+                    </p>
+
+                    <p>
+                        <b>Winner:</b>
+
+                        {% if item.highest_bid %}
+                            {{ item.highest_bid.bidder.first_name }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </p>
+
+                    <p>
+                        <b>Ended On:</b>
+                        {{ item.product.auction_end_time }}
+                    </p>
+
+                    <!-- ACTION -->
+                    <a href="{% url 'delete_auction' item.product.id %}"
+                       class="btn btn-danger btn-sm w-100 mt-2"
+                       onclick="return confirm('Delete this auction permanently?')">
+                        Delete Auction
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <p class="text-center">No ended auctions found.</p>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

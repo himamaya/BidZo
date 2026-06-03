@@ -1,0 +1,160 @@
+{% extends 'sellerbase.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <!-- PRODUCT HEADER -->
+    <div class="card shadow border-0 mb-4">
+
+        <div class="row g-0">
+
+            <div class="col-md-4">
+
+                {% if product.product_image %}
+                <img src="{{ product.product_image.url }}"
+                     class="img-fluid rounded-start"
+                     style="height:250px;width:100%;object-fit:cover;">
+                {% endif %}
+
+            </div>
+
+            <div class="col-md-8">
+
+                <div class="card-body">
+
+                    <h2 class="fw-bold">{{ product.product_name }}</h2>
+
+                    <p class="text-muted">{{ product.description }}</p>
+
+                    <div class="row mt-3">
+
+                        <div class="col-md-4">
+                            <h6>Total Bids</h6>
+                            <strong>{{ total_bids }}</strong>
+                        </div>
+
+                        <div class="col-md-4">
+                            <h6>Starting Price</h6>
+                            <strong>₹{{ product.starting_bid }}</strong>
+                        </div>
+
+                        <div class="col-md-4">
+                            <h6>Highest Bid</h6>
+
+                            {% if highest_bid %}
+                                <strong class="text-success">
+                                    ₹{{ highest_bid.bid_amount }}
+                                </strong>
+                                <br>
+                                <small>
+                                    by {{ highest_bid.bidder.first_name }} {{ highest_bid.bidder.last_name }}
+                                </small>
+                            {% else %}
+                                <strong>₹0</strong>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- WINNER -->
+    {% if highest_bid %}
+
+    <div class="alert alert-success shadow-sm mb-4">
+
+        <h5 class="mb-0">
+            🏆 Highest Bidder:
+            {{ highest_bid.bidder.first_name }}
+            {{ highest_bid.bidder.last_name }}
+            (₹{{ highest_bid.bid_amount }})
+        </h5>
+
+    </div>
+
+    {% endif %}
+
+    <!-- BID HISTORY -->
+    <div class="card shadow border-0">
+
+        <div class="card-header bg-dark text-white">
+            <h4 class="mb-0">Bid History</h4>
+        </div>
+
+        <div class="card-body">
+
+            {% if bids %}
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-light">
+
+                        <tr>
+                            <th>SL NO</th>
+                            <th>Bidder Name</th>
+                            <th>Bid Amount</th>
+                            <th>Date & Time</th>
+                           
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for bid in bids %}
+
+                        <tr>
+
+                            <td>{{ forloop.counter }}</td>
+
+                            <!-- NAME -->
+                            <td>
+                                {{ bid.bidder.first_name }} {{ bid.bidder.last_name }}
+                            </td>
+
+                            <!-- AMOUNT -->
+                            <td class="fw-bold text-success">
+                                ₹{{ bid.bid_amount }}
+                            </td>
+
+                            <!-- TIME -->
+                            <td>
+                                {{ bid.bid_time|date:"d M Y h:i A" }}
+                            </td>
+
+                            
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="alert alert-warning text-center">
+                No bids placed yet.
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

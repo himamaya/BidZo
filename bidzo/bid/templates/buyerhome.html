@@ -1,0 +1,252 @@
+{% extends 'buyerbase.html' %}
+
+{% block content %}
+
+<style>
+.container-fluid{
+    max-width:1600px;
+}
+
+/* HERO */
+.hero-section{
+    background:linear-gradient(135deg,#0f172a,#1e3a8a);
+    border-radius:30px;
+    color:white;
+}
+
+/* AUCTION CARD */
+.auction-card{
+    border:none;
+    border-radius:18px;
+    overflow:hidden;
+    transition:.3s;
+    box-shadow:0 8px 20px rgba(0,0,0,.1);
+}
+
+.auction-card:hover{
+    transform:translateY(-5px);
+}
+
+.auction-img{
+    height:220px;
+    width:100%;
+    object-fit:cover;
+}
+
+/* CATEGORY */
+.category-card{
+    height:220px;
+    border-radius:25px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 10px 25px rgba(0,0,0,.2);
+    transition:.3s;
+    background-size:cover;
+    background-position:center;
+}
+
+.category-card:hover{
+    transform:scale(1.03);
+}
+
+.category-card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,.25);
+}
+
+.category-card h4{
+    position:relative;
+    z-index:2;
+    color:white;
+    font-weight:bold;
+    text-shadow:0 2px 8px rgba(0,0,0,.6);
+}
+
+/* CATEGORY IMAGES */
+.sports{
+    background-image:url('https://images.unsplash.com/photo-1546519638-68e109498ffc');
+}
+
+.fashion{
+    background-image:url('https://images.unsplash.com/photo-1445205170230-053b83016050');
+}
+
+.collectibles{
+    background-image:url('https://images.unsplash.com/photo-1518546305927-5a555bb7020d');
+}
+
+.electronics{
+    background-image:url('https://images.unsplash.com/photo-1519389950473-47ba0277781c');
+}
+</style>
+
+<div class="container-fluid px-3 mt-4">
+
+    <!-- HERO -->
+
+    <div class="hero-section p-5 mb-4">
+
+        <h1 class="fw-bold display-5">
+            Welcome, {{ request.session.first_name }}
+        </h1>
+
+        <p class="fs-5">
+            Discover exciting auctions and win amazing products.
+        </p>
+
+        <a href="{% url 'liveauctions' %}"
+           class="btn btn-warning btn-lg">
+             Explore Auctions
+        </a>
+
+    </div>
+
+    <!-- DJANGO MESSAGES -->
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm rounded-4 mb-4"
+             role="alert">
+
+            {{ message }}
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close">
+            </button>
+
+        </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+    <!-- ENDING SOON -->
+
+    {% if ending_soon %}
+
+    <h3 class="fw-bold text-danger mb-3">
+        ⏳ Ending Soon Auctions
+    </h3>
+
+    <div class="row">
+
+        {% for product in ending_soon %}
+
+        <div class="col-lg-4 col-md-6 mb-4">
+
+            <div class="card auction-card h-100">
+
+                {% if product.product_image %}
+                <img src="{{ product.product_image.url }}"
+                     class="auction-img"
+                     alt="{{ product.product_name }}">
+                {% endif %}
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold">
+                        {{ product.product_name }}
+                    </h5>
+
+                    <p class="text-muted">
+                        {{ product.description|truncatechars:80 }}
+                    </p>
+
+                    <p>
+                         Current Bid:
+                        <strong class="text-success">
+                            ₹{{ product.current_bid|default:product.starting_bid }}
+                        </strong>
+                    </p>
+
+                    <a href="{% url 'auctiondetails' product.id %}"
+                       class="btn btn-danger">
+                        Bid Now
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+   <!-- CATEGORIES -->
+
+<h3 class="fw-bold mt-4 mb-3">
+    Categories
+</h3>
+
+<div class="row">
+
+    <!-- SPORTS -->
+    <div class="col-md-3 mb-3">
+
+        <a href="{% url 'category_page' %}" style="text-decoration:none; color:inherit;">
+
+            <div class="category-card sports">
+                <h4>🏀 Sports</h4>
+            </div>
+
+        </a>
+
+    </div>
+
+    <!-- FASHION -->
+    <div class="col-md-3 mb-3">
+
+        <a href="{% url 'category_page' %}" style="text-decoration:none; color:inherit;">
+
+            <div class="category-card fashion">
+                <h4>👗 Fashion</h4>
+            </div>
+
+        </a>
+
+    </div>
+
+    <!-- COLLECTIBLES -->
+    <div class="col-md-3 mb-3">
+
+        <a href="{% url 'category_page' %}" style="text-decoration:none; color:inherit;">
+
+            <div class="category-card collectibles">
+                <h4>🪙 Collectibles</h4>
+            </div>
+
+        </a>
+
+    </div>
+
+    <!-- ELECTRONICS -->
+    <div class="col-md-3 mb-3">
+
+        <a href="{% url 'category_page' %}" style="text-decoration:none; color:inherit;">
+
+            <div class="category-card electronics">
+                <h4>📱 Electronics</h4>
+            </div>
+
+        </a>
+
+    </div>
+
+</div>
+    </div>
+
+</div>
+{% endblock %}

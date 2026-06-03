@@ -1,0 +1,139 @@
+{% extends 'buyerbase.html' %}
+{% block content %}
+
+<style>
+
+body {
+    background: #f8fafc;
+}
+
+.category-box {
+    margin-bottom: 40px;
+}
+
+.category-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #0f172a;
+    border-left: 5px solid #1e3a8a;
+    padding-left: 10px;
+}
+
+.sub-title {
+    font-size: 18px;
+    margin: 20px 0 10px;
+    color: #1e3a8a;
+    font-weight: 600;
+}
+
+.product-card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    transition: 0.3s;
+    background: white;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-img {
+    height: 180px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.price {
+    font-weight: bold;
+    color: #16a34a;
+}
+
+.badge-live {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: red;
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 20px;
+}
+
+</style>
+
+<div class="container mt-4">
+
+    <h2 class="mb-4 fw-bold text-dark"> Categories</h2>
+
+    {% for item in data %}
+
+    <div class="category-box">
+
+        <!-- CATEGORY NAME -->
+        <div class="category-title">
+            {{ item.category.category_name }}
+        </div>
+
+        <!-- SUBCATEGORIES -->
+        {% for subcat, products in item.subcategories.items %}
+
+            <div class="sub-title">
+                {{ subcat }}
+            </div>
+
+            <div class="row g-3">
+
+                {% for product in products %}
+
+                <div class="col-md-3">
+
+                    <div class="card product-card">
+
+                        <div style="position:relative;">
+                            <span class="badge-live">Live</span>
+
+                            <img src="{{ product.product_image.url }}"
+                                 class="product-img">
+                        </div>
+
+                        <div class="card-body">
+
+                            <h6 class="fw-bold">
+                                {{ product.product_name }}
+                            </h6>
+
+                            <p class="price">
+                                ₹{{ product.starting_bid }}
+                            </p>
+
+                            <a href="{% url 'auctiondetails' product.id %}"
+                               class="btn btn-dark w-100 btn-sm">
+                                View
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% empty %}
+
+    <p>No categories found</p>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

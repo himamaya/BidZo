@@ -1,0 +1,74 @@
+{% extends 'buyerbase.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h3 class="fw-bold mb-3">Buyer Complaint Box</h3>
+
+    <!-- MESSAGES -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show">
+                {{ message }}
+                <button class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- FORM -->
+    <form method="post" class="card p-4 shadow-sm mb-4">
+        {% csrf_token %}
+
+        <input type="text" name="subject"
+               class="form-control mb-3"
+               placeholder="Subject"
+               required>
+
+        <textarea name="complaint"
+                  class="form-control mb-3"
+                  placeholder="Write your complaint..."
+                  rows="4"
+                  required></textarea>
+
+        <button class="btn btn-primary w-100">
+            Submit Complaint
+        </button>
+    </form>
+
+    <!-- LIST -->
+    <h5 class="mb-3">Your Complaints</h5>
+
+    {% for c in complaints %}
+
+        <div class="card shadow-sm mb-3 p-3">
+
+            <div class="d-flex justify-content-between">
+                <b>{{ c.subject }}</b>
+                <small class="text-muted">{{ c.created_at }}</small>
+            </div>
+
+            <p class="mt-2 mb-1">{{ c.complaint }}</p>
+
+            <small>
+                Status:
+                <span class="badge bg-warning">{{ c.status }}</span>
+            </small>
+
+            {% if c.admin_reply %}
+                <div class="alert alert-success mt-3 mb-0">
+                    <b>Admin Reply:</b> {{ c.admin_reply }}
+                </div>
+            {% endif %}
+
+        </div>
+
+    {% empty %}
+
+        <p class="text-muted">No complaints yet.</p>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

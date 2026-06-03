@@ -1,0 +1,91 @@
+{% extends 'buyerbase.html' %}
+
+{% block content %}
+
+<style>
+.payment-card{
+    max-width: 650px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 25px;
+    padding: 30px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+}
+
+.amount-box{
+    background: linear-gradient(135deg,#0f172a,#1e3a8a);
+    color: white;
+    padding: 20px;
+    border-radius: 18px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.product-img{
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin-bottom: 15px;
+}
+</style>
+
+<div class="container">
+
+    <div class="payment-card">
+
+        <h3 class="text-center fw-bold mb-3">💳 Payment Details</h3>
+
+        <!-- PRODUCT IMAGE -->
+        {% if order.product.product_image %}
+            <img src="{{ order.product.product_image.url }}" class="product-img">
+        {% endif %}
+
+        <!-- PRODUCT NAME -->
+        <h4 class="fw-bold">{{ order.product.product_name }}</h4>
+
+        <p class="text-muted">
+            {{ order.product.description|truncatechars:100 }}
+        </p>
+
+        <!-- AMOUNT -->
+        <div class="amount-box">
+            <small>Total Amount to Pay</small>
+            <h2 class="fw-bold">₹{{ order.amount }}</h2>
+        </div>
+
+        <!-- PAYMENT INFO -->
+        <div class="alert alert-info">
+            <strong>UPI ID:</strong> bidzo@upi <br>
+            <strong>Bank:</strong> BidZo Bank Account (Demo)
+        </div>
+
+        <!-- PAYMENT FORM -->
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Transaction ID</label>
+                <input type="text" name="transaction_id" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Your UPI ID (Optional)</label>
+                <input type="text" name="upi_id" class="form-control">
+            </div>
+
+            <button type="submit" class="btn btn-success w-100">
+                💰 Pay Now (Demo)
+            </button>
+        </form>
+
+        <!-- BACK BUTTON -->
+        <a href="{% url 'buyerhome' %}" class="btn btn-outline-dark w-100 mt-3">
+            ⬅ Back to Home
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

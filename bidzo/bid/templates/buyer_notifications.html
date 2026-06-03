@@ -1,0 +1,68 @@
+{% extends 'buyerbase.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow border-0">
+
+        <!-- HEADER -->
+        <div class="card-header bg-white text-black">
+
+            <h3 class="mb-0">
+                 My Notifications
+            </h3>
+
+        </div>
+
+        <!-- BODY -->
+        <div class="card-body">
+
+            {% if notifications %}
+
+                {% for n in notifications %}
+
+                <div class="alert alert-light border mb-3 shadow-sm">
+
+                    <!-- TITLE + TYPE -->
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <h6 class="fw-bold mb-0">
+                            {{ n.title }}
+                        </h6>
+
+                        <span class="badge bg-info text-dark">
+                            {{ n.notification_type }}
+                        </span>
+
+                    </div>
+
+                    <!-- MESSAGE -->
+                    <p class="mb-1 mt-2">
+                        {{ n.message }}
+                    </p>
+
+                    <!-- TIME -->
+                    <small class="text-muted">
+                        {{ n.created_at|date:"d M Y h:i A" }}
+                    </small>
+
+                </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="alert alert-warning text-center">
+                    No notifications available.
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

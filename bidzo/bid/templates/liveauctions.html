@@ -1,0 +1,294 @@
+{% extends 'buyerbase.html' %}
+
+{% block content %}
+
+<style>
+
+    .auction-card {
+
+        border: none;
+        border-radius: 28px;
+        overflow: hidden;
+        transition: 0.3s;
+        background: white;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+    }
+
+    .auction-card:hover {
+
+        transform: translateY(-6px);
+
+    }
+
+    .auction-image {
+
+        height: 280px;
+        object-fit: cover;
+
+    }
+
+    .bid-box {
+
+        background: #f8fafc;
+        border-radius: 18px;
+        padding: 14px;
+
+    }
+
+    .bid-btn {
+
+        border-radius: 50px;
+        padding: 12px;
+        font-weight: bold;
+        font-size: 17px;
+
+    }
+
+    .countdown {
+
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #dc3545;
+
+    }
+
+</style>
+
+<div class="container mt-5">
+
+    <!-- PAGE TITLE -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+
+                Live Auctions
+
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                Explore active auctions and place your bids
+
+            </p>
+
+        </div>
+
+        <span class="badge bg-danger fs-6 px-3 py-2 rounded-pill">
+
+            {{ products|length }} Live
+
+        </span>
+
+    </div>
+
+    <!-- PRODUCTS -->
+
+    <div class="row g-4">
+
+        {% for product in products %}
+
+        <div class="col-lg-4 col-md-6">
+
+            <div class="card auction-card h-100">
+
+                <!-- PRODUCT IMAGE -->
+
+                <img src="{{ product.product_image.url }}"
+                     class="card-img-top auction-image"
+                     alt="{{ product.product_name }}">
+
+                <!-- CARD BODY -->
+
+                <div class="card-body d-flex flex-column p-4">
+
+                    <!-- CATEGORY -->
+
+                    <span class="badge bg-dark mb-2 px-3 py-2 align-self-start">
+
+                        {{ product.category.category_name }}
+
+                    </span>
+
+                    <!-- SUBCATEGORY -->
+
+                    <span class="badge bg-secondary mb-3 px-3 py-2 align-self-start">
+
+                        {{ product.subcategory.subcategory_name }}
+
+                    </span>
+
+                    <!-- PRODUCT NAME -->
+
+                    <h4 class="fw-bold mb-2">
+
+                        {{ product.product_name }}
+
+                    </h4>
+
+                    <!-- CONDITION -->
+
+                    <p class="mb-3">
+
+                        <span class="badge bg-info text-dark px-3 py-2">
+
+                            {{ product.condition }}
+
+                        </span>
+
+                    </p>
+
+                    <!-- DESCRIPTION -->
+
+                    <p class="text-muted small mb-4">
+
+                        {{ product.description|truncatewords:18 }}
+
+                    </p>
+
+                    <!-- BID SECTION -->
+
+                    <div class="bid-box mb-4">
+
+                        <div class="d-flex justify-content-between mb-2">
+
+                            <small class="text-muted">
+
+                                Starting Bid
+
+                            </small>
+
+                            <small class="fw-bold">
+
+                                ₹{{ product.starting_bid }}
+
+                            </small>
+
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+
+                            <small class="text-muted">
+
+                                Current Bid
+
+                            </small>
+
+                            <small class="fw-bold text-success">
+
+                                ₹{{ product.current_bid|default:product.starting_bid }}
+
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    <!-- COUNTDOWN TIMER -->
+
+                    <div class="mb-4">
+
+                        <small class="text-muted">
+
+                            Time Remaining
+
+                        </small>
+
+                        <p class="countdown mb-0"
+                           data-end="{{ product.auction_end_time|date:'c' }}">
+
+                            Loading...
+
+                        </p>
+
+                    </div>
+
+                    <!-- BUTTON -->
+
+                    <a href="{% url 'auctiondetails' product.id %}"
+                       class="btn btn-dark mt-auto bid-btn">
+
+                        Place Bid
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="col-12">
+
+            <div class="alert alert-warning text-center rounded-4">
+
+                No Live Auctions Available
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<!-- COUNTDOWN SCRIPT -->
+
+<script>
+
+function updateCountdowns() {
+
+    document.querySelectorAll('.countdown').forEach(function(element) {
+
+        const endTime = new Date(element.dataset.end);
+        const now = new Date();
+
+        const diff = endTime - now;
+
+        if (diff <= 0) {
+
+            element.innerHTML = "⛔ Auction Ended";
+
+            return;
+
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+        const hours = Math.floor(
+            (diff / (1000 * 60 * 60)) % 24
+        );
+
+        const minutes = Math.floor(
+            (diff / (1000 * 60)) % 60
+        );
+
+        const seconds = Math.floor(
+            (diff / 1000) % 60
+        );
+
+        element.innerHTML =
+            "⏳ " +
+            days + "d " +
+            hours + "h " +
+            minutes + "m " +
+            seconds + "s";
+
+    });
+
+}
+
+updateCountdowns();
+
+setInterval(updateCountdowns, 1000);
+
+</script>
+
+{% endblock %}

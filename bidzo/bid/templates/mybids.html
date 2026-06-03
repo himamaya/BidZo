@@ -1,0 +1,85 @@
+{% extends 'buyerbase.html' %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <div class="card shadow-lg border-0 rounded-4">
+
+        <div class="card-header bg-white text-black rounded-top-4">
+            <h3 class="mb-0">
+                 My Bids
+            </h3>
+        </div>
+
+        <div class="card-body">
+
+            {% if bids %}
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th>SL NO</th>
+                            <th>Product</th>
+                            <th>Image</th>
+                            <th>My Bid</th>
+                            <th>Bid Time</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for bid in bids %}
+
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+
+                            <td>
+                                <strong>{{ bid.product.product_name }}</strong>
+                            </td>
+
+                            <td>
+                                {% if bid.product.product_image %}
+                                <img src="{{ bid.product.product_image.url }}"
+                                     width="70"
+                                     height="70"
+                                     class="rounded shadow-sm"
+                                     style="object-fit:cover;">
+                                {% endif %}
+                            </td>
+
+                            <td class="fw-bold text-success">
+                                ₹{{ bid.bid_amount }}
+                            </td>
+
+                            <td>
+                                {{ bid.bid_time|date:"d M Y h:i A" }}
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="alert alert-warning text-center">
+                You haven't placed any bids yet.
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

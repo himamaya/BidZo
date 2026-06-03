@@ -1,0 +1,141 @@
+{% extends 'baseadmin.html' %}
+
+{% block content %}
+
+<div class="card shadow border-0">
+
+    <div class="card-header bg-dark text-white">
+
+        <h3>Pending Products</h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered table-hover align-middle">
+
+            <thead class="table-dark">
+
+                <tr>
+
+                    <th>Image</th>
+                    <th>Product</th>
+                    <th>Seller</th>
+                    <th>Category</th>
+                    <th>Starting Bid</th>
+                    <th>Status</th>
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for product in products %}
+
+                <tr>
+
+                    <!-- PRODUCT IMAGE -->
+
+                    <td>
+
+                        <img src="{{ product.product_image.url }}"
+                        width="80"
+                        height="80"
+                        style="object-fit:cover;
+                        border-radius:8px;">
+
+                    </td>
+
+                    <!-- PRODUCT NAME -->
+
+                    <td>
+
+                        {{ product.product_name }}
+
+                    </td>
+
+                    <!-- SELLER -->
+
+                    <td>
+
+                        {{ product.seller.first_name }}
+                        {{ product.seller.last_name }}
+
+                    </td>
+
+                    <!-- CATEGORY -->
+
+                    <td>
+
+                        {{ product.category.category_name }}
+
+                    </td>
+
+                    <!-- STARTING BID -->
+
+                    <td>
+
+                        ₹{{ product.starting_bid }}
+
+                    </td>
+
+                    <!-- STATUS -->
+
+                    <td>
+
+                        <span class="badge bg-warning text-dark">
+
+                            {{ product.status }}
+
+                        </span>
+
+                    </td>
+
+                    <!-- ACTION BUTTONS -->
+
+                    <td>
+
+                        <a href="{% url 'approveproduct' product.id %}"
+                        class="btn btn-success btn-sm">
+
+                            Approve
+
+                        </a>
+
+                        <a href="{% url 'rejectproduct' product.id %}"
+                        class="btn btn-danger btn-sm">
+
+                            Reject
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="7"
+                    class="text-center text-muted">
+
+                        No Pending Products
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

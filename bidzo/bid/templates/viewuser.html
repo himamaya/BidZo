@@ -1,0 +1,213 @@
+{% extends 'baseadmin.html' %}
+
+{% block content %}
+
+<h3 class="mb-4">
+    View Users
+</h3>
+
+<div class="card shadow-sm border-0">
+
+    <div class="card-body">
+
+       
+
+        </div>
+
+        <!-- TABLE -->
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Profile</th>
+
+                        <th>Name</th>
+
+                        <th>Email</th>
+
+                        <th>Role</th>
+
+                        <th>Address</th>
+
+                        <th>ID Proof</th>
+
+                        <th>Status</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for user in users %}
+
+                    <tr>
+
+                        <!-- ID -->
+
+                        <td>
+                            {{ forloop.counter }}
+                        </td>
+
+                        <!-- PROFILE IMAGE -->
+
+                        <td>
+
+                            {% if user.image %}
+
+                            <img src="{{ user.image.url }}" width="50" height="50" class="rounded-circle border"
+                                style="object-fit:cover;">
+
+                            {% else %}
+
+                            <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" width="50" height="50"
+                                class="rounded-circle border">
+
+                            {% endif %}
+
+                        </td>
+
+                        <!-- NAME -->
+
+                        <td>
+                            {{ user.first_name }} {{ user.last_name }}
+                        </td>
+
+                        <!-- EMAIL -->
+
+                        <td>
+                            {{ user.email }}
+                        </td>
+
+                        <td>
+
+                            {% if user.role == 'seller' %}
+
+                            <span class="badge bg-primary">
+                                Seller
+                            </span>
+
+                            {% elif user.role == 'buyer' %}
+
+                            <span class="badge bg-success">
+                                Buyer
+                            </span>
+
+                            {% elif user.role == 'both' %}
+
+                            <span class="badge bg-dark">
+                                Buyer + Seller
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <!-- ADDRESS -->
+
+                        <td>
+                            {{ user.address }}
+                        </td>
+
+                        <!-- ID PROOF -->
+
+                        <td>
+
+                            {% if user.idproof %}
+
+                            <a href="{{ user.idproof.url }}" target="_blank" class="btn btn-info btn-sm">
+
+                                View ID
+
+                            </a>
+
+                            {% else %}
+
+                            <span class="text-muted">
+                                No File
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <!-- STATUS -->
+
+                        <td>
+
+                            {% if user.status == 'blocked' %}
+
+                            <span class="badge bg-danger">
+                                Blocked
+                            </span>
+
+                            {% else %}
+
+                            <span class="badge bg-success">
+                                Active
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <!-- ACTION -->
+
+                        <td>
+
+                            {% if user.status == 'blocked' %}
+
+                            <a href="{% url 'unblockuser' user.id %}" class="btn btn-success btn-sm">
+
+                                Unblock
+
+                            </a>
+
+                            {% else %}
+
+                            <a href="{% url 'blockuser' user.id %}" class="btn btn-danger btn-sm">
+
+                                Block
+
+                            </a>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="9" class="text-center text-muted">
+
+                            No Users Found
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
